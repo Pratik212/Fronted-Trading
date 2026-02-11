@@ -223,6 +223,18 @@ tbody tr:active td {
   font-size: 0.875rem;
 }
 
+.btn-icon {
+  padding: 0.5rem;
+  line-height: 0;
+  border-radius: var(--radius-sm);
+}
+.btn-icon svg {
+  display: block;
+}
+.btn-icon:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
 /* ===== Forms ===== */
 .input-group {
   margin-bottom: 1.125rem;

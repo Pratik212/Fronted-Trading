@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api';
 import Modal from '../components/Modal';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { EditIcon, TrashIcon } from '../components/Icons';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -10,6 +12,7 @@ export default function Salaries() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [modal, setModal] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [form, setForm] = useState({ employee_id: '', month: '', year: new Date().getFullYear(), amount: '', paid_date: '', notes: '' });
 
   const load = async () => {
@@ -74,9 +77,9 @@ export default function Salaries() {
   };
 
   const remove = async (id) => {
-    if (!confirm('Delete this salary record?')) return;
     try {
       await api.delete(`/api/salaries/${id}`);
+      setDeleteConfirm(null);
       load();
     } catch (e) {
       setError(e.message);
@@ -119,8 +122,8 @@ export default function Salaries() {
                     <td>{s.notes || '—'}</td>
                     <td>
                       <div className="action-buttons">
-                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => openEdit(s)}>Edit</button>
-                        <button type="button" className="btn btn-danger btn-sm" onClick={() => remove(s.id)}>Delete</button>
+                        <button type="button" className="btn btn-secondary btn-sm btn-icon" onClick={() => openEdit(s)} title="Edit"><EditIcon /></button>
+                        <button type="button" className="btn btn-danger btn-sm btn-icon" onClick={() => setDeleteConfirm({ id: s.id })} title="Delete"><TrashIcon /></button>
                       </div>
                     </td>
                   </tr>
@@ -167,6 +170,15 @@ export default function Salaries() {
           <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
         </div>
       </Modal>
+
+      <ConfirmDialog
+        isOpen={!!deleteConfirm}
+        title="Delete salary record?"
+        message="This action cannot be undone."
+        confirmLabel="Delete"
+        onConfirm={() => deleteConfirm && remove(deleteConfirm.id)}
+        onCancel={() => setDeleteConfirm(null)}
+      />
     </>
   );
 }

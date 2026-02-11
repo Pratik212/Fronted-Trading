@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api';
 import Modal from '../components/Modal';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { EditIcon, TrashIcon } from '../components/Icons';
 
 export default function Challans() {
   const [list, setList] = useState([]);
@@ -8,6 +10,7 @@ export default function Challans() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [modal, setModal] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [form, setForm] = useState({ challan_number: '', party_id: '', date: '', amount: '', description: '' });
 
   const load = async () => {
@@ -63,9 +66,9 @@ export default function Challans() {
   };
 
   const remove = async (id) => {
-    if (!confirm('Delete this challan?')) return;
     try {
       await api.delete(`/api/challans/${id}`);
+      setDeleteConfirm(null);
       load();
     } catch (e) {
       setError(e.message);
@@ -108,8 +111,8 @@ export default function Challans() {
                     <td>{c.description || '—'}</td>
                     <td>
                       <div className="action-buttons">
-                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => openEdit(c)}>Edit</button>
-                        <button type="button" className="btn btn-danger btn-sm" onClick={() => remove(c.id)}>Delete</button>
+                        <button type="button" className="btn btn-secondary btn-sm btn-icon" onClick={() => openEdit(c)} title="Edit"><EditIcon /></button>
+                        <button type="button" className="btn btn-danger btn-sm btn-icon" onClick={() => setDeleteConfirm({ id: c.id })} title="Delete"><TrashIcon /></button>
                       </div>
                     </td>
                   </tr>
@@ -148,6 +151,15 @@ export default function Challans() {
           <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
         </div>
       </Modal>
+
+      <ConfirmDialog
+        isOpen={!!deleteConfirm}
+        title="Delete challan?"
+        message="This action cannot be undone."
+        confirmLabel="Delete"
+        onConfirm={() => deleteConfirm && remove(deleteConfirm.id)}
+        onCancel={() => setDeleteConfirm(null)}
+      />
     </>
   );
 }

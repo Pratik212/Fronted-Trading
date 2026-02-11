@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api';
 import Modal from '../components/Modal';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { EditIcon, TrashIcon } from '../components/Icons';
 
 export default function Parties() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [modal, setModal] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [form, setForm] = useState({ name: '', contact: '', address: '', gstin: '' });
 
   const load = async () => {
@@ -50,9 +53,9 @@ export default function Parties() {
   };
 
   const remove = async (id) => {
-    if (!confirm('Delete this party?')) return;
     try {
       await api.delete(`/api/parties/${id}`);
+      setDeleteConfirm(null);
       load();
     } catch (e) {
       setError(e.message);
@@ -99,8 +102,8 @@ export default function Parties() {
                     <td>{p.gstin || '—'}</td>
                     <td>
                       <div className="action-buttons">
-                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => openEdit(p)}>Edit</button>
-                        <button type="button" className="btn btn-danger btn-sm" onClick={() => remove(p.id)}>Delete</button>
+                        <button type="button" className="btn btn-secondary btn-sm btn-icon" onClick={() => openEdit(p)} title="Edit"><EditIcon /></button>
+                        <button type="button" className="btn btn-danger btn-sm btn-icon" onClick={() => setDeleteConfirm({ id: p.id })} title="Delete"><TrashIcon /></button>
                       </div>
                     </td>
                   </tr>
@@ -138,6 +141,14 @@ export default function Parties() {
         </div>
       </Modal>
 
+      <ConfirmDialog
+        isOpen={!!deleteConfirm}
+        title="Delete party?"
+        message="This action cannot be undone."
+        confirmLabel="Delete"
+        onConfirm={() => deleteConfirm && remove(deleteConfirm.id)}
+        onCancel={() => setDeleteConfirm(null)}
+      />
     </>
   );
 }

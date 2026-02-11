@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api';
 import Modal from '../components/Modal';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { EditIcon, TrashIcon } from '../components/Icons';
 
 export default function Payments() {
   const [list, setList] = useState([]);
@@ -8,6 +10,7 @@ export default function Payments() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [modal, setModal] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [form, setForm] = useState({ party_id: '', amount: '', payment_date: new Date().toISOString().slice(0, 10), notes: '' });
 
   const load = async () => {
@@ -62,9 +65,9 @@ export default function Payments() {
   };
 
   const remove = async (id) => {
-    if (!confirm('Delete this payment record?')) return;
     try {
       await api.delete(`/api/payments/${id}`);
+      setDeleteConfirm(null);
       load();
     } catch (e) {
       setError(e.message);
@@ -112,8 +115,8 @@ export default function Payments() {
                     <td>{row.notes || '—'}</td>
                     <td>
                       <div className="action-buttons">
-                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => openEdit(row)}>Edit</button>
-                        <button type="button" className="btn btn-danger btn-sm" onClick={() => remove(row.id)}>Delete</button>
+                        <button type="button" className="btn btn-secondary btn-sm btn-icon" onClick={() => openEdit(row)} title="Edit"><EditIcon /></button>
+                        <button type="button" className="btn btn-danger btn-sm btn-icon" onClick={() => setDeleteConfirm({ id: row.id })} title="Delete"><TrashIcon /></button>
                       </div>
                     </td>
                   </tr>
@@ -148,6 +151,15 @@ export default function Payments() {
           <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
         </div>
       </Modal>
+
+      <ConfirmDialog
+        isOpen={!!deleteConfirm}
+        title="Delete payment?"
+        message="This action cannot be undone."
+        confirmLabel="Delete"
+        onConfirm={() => deleteConfirm && remove(deleteConfirm.id)}
+        onCancel={() => setDeleteConfirm(null)}
+      />
     </>
   );
 }

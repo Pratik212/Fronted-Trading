@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api';
 import Modal from '../components/Modal';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { EditIcon, TrashIcon } from '../components/Icons';
 
 export default function Employees() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [modal, setModal] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [form, setForm] = useState({ name: '', contact: '', role: '', joining_date: '' });
 
   const load = async () => {
@@ -56,9 +59,9 @@ export default function Employees() {
   };
 
   const remove = async (id) => {
-    if (!confirm('Delete this employee?')) return;
     try {
       await api.delete(`/api/employees/${id}`);
+      setDeleteConfirm(null);
       load();
     } catch (e) {
       setError(e.message);
@@ -98,8 +101,8 @@ export default function Employees() {
                     <td>{emp.joining_date || '—'}</td>
                     <td>
                       <div className="action-buttons">
-                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => openEdit(emp)}>Edit</button>
-                        <button type="button" className="btn btn-danger btn-sm" onClick={() => remove(emp.id)}>Delete</button>
+                        <button type="button" className="btn btn-secondary btn-sm btn-icon" onClick={() => openEdit(emp)} title="Edit"><EditIcon /></button>
+                        <button type="button" className="btn btn-danger btn-sm btn-icon" onClick={() => setDeleteConfirm({ id: emp.id })} title="Delete"><TrashIcon /></button>
                       </div>
                     </td>
                   </tr>
@@ -132,6 +135,15 @@ export default function Employees() {
           <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
         </div>
       </Modal>
+
+      <ConfirmDialog
+        isOpen={!!deleteConfirm}
+        title="Delete employee?"
+        message="This action cannot be undone."
+        confirmLabel="Delete"
+        onConfirm={() => deleteConfirm && remove(deleteConfirm.id)}
+        onCancel={() => setDeleteConfirm(null)}
+      />
     </>
   );
 }
