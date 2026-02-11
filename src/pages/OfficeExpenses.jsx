@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api';
+import Modal from '../components/Modal';
 
 export default function OfficeExpenses() {
   const [list, setList] = useState([]);
@@ -75,71 +76,72 @@ export default function OfficeExpenses() {
       </div>
       {error && <p className="error-msg">{error}</p>}
       {list.length > 0 && (
-        <div className="card" style={{ marginBottom: '1rem' }}>
+        <div className="card animate-fade-in-up" style={{ marginBottom: '1rem' }}>
           <strong>Total Expense: ₹{total.toLocaleString()}</strong>
         </div>
       )}
       {loading ? (
         <p className="empty-state">Loading...</p>
       ) : list.length === 0 ? (
-        <p className="empty-state">No office expenses yet.</p>
-      ) : (
-        <div className="card" style={{ overflow: 'auto' }}>
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Amount</th>
-                <th style={{ width: '120px' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.map((e) => (
-                <tr key={e.id}>
-                  <td>{e.date || '—'}</td>
-                  <td>{e.category || '—'}</td>
-                  <td>{e.description || '—'}</td>
-                  <td>₹{Number(e.amount).toLocaleString()}</td>
-                  <td>
-                    <button type="button" className="btn btn-secondary" style={{ marginRight: '0.5rem', padding: '0.4rem 0.8rem' }} onClick={() => openEdit(e)}>Edit</button>
-                    <button type="button" className="btn btn-danger" style={{ padding: '0.4rem 0.8rem' }} onClick={() => remove(e.id)}>Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="card animate-fade-in-up">
+          <p className="empty-state">No office expenses yet.</p>
         </div>
-      )}
-
-      {modal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }} onClick={() => setModal(null)}>
-          <div className="card" style={{ maxWidth: '420px', width: '90%' }} onClick={(e) => e.stopPropagation()}>
-            <h2>{modal === 'add' ? 'Add Office Expense' : 'Edit Expense'}</h2>
-            <div className="input-group">
-              <label>Category</label>
-              <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="e.g. Rent, Utilities" />
-            </div>
-            <div className="input-group">
-              <label>Description</label>
-              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} />
-            </div>
-            <div className="input-group">
-              <label>Amount (₹) *</label>
-              <input type="number" step="0.01" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
-            </div>
-            <div className="input-group">
-              <label>Date</label>
-              <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
-            </div>
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
-              <button type="button" className="btn btn-primary" onClick={save}>Save</button>
-              <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
-            </div>
+      ) : (
+        <div className="card table-wrap animate-fade-in-up">
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Category</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th className="th-actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="stagger-children">
+                {list.map((e) => (
+                  <tr key={e.id} className="stagger-item">
+                    <td>{e.date || '—'}</td>
+                    <td>{e.category || '—'}</td>
+                    <td>{e.description || '—'}</td>
+                    <td>₹{Number(e.amount).toLocaleString()}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => openEdit(e)}>Edit</button>
+                        <button type="button" className="btn btn-danger btn-sm" onClick={() => remove(e.id)}>Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
+
+      <Modal isOpen={!!modal} onClose={() => setModal(null)} title={modal === 'add' ? 'Add Office Expense' : 'Edit Expense'}>
+        <div className="input-group">
+          <label>Category</label>
+          <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="e.g. Rent, Utilities" />
+        </div>
+        <div className="input-group">
+          <label>Description</label>
+          <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} />
+        </div>
+        <div className="input-group">
+          <label>Amount (₹) *</label>
+          <input type="number" step="0.01" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
+        </div>
+        <div className="input-group">
+          <label>Date</label>
+          <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+        </div>
+        <div className="modal-actions">
+          <button type="button" className="btn btn-primary" onClick={save}>Save</button>
+          <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
+        </div>
+      </Modal>
     </>
   );
 }

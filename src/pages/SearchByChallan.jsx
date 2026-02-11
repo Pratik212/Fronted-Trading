@@ -30,7 +30,7 @@ export default function SearchByChallan() {
       <div className="page-header">
         <h1>Search Party by Challan Number</h1>
       </div>
-      <div className="card" style={{ maxWidth: '500px' }}>
+      <div className="card animate-fade-in-up" style={{ maxWidth: '500px' }}>
         <div className="input-group">
           <label>Challan Number</label>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -49,7 +49,7 @@ export default function SearchByChallan() {
       </div>
 
       {result && (
-        <div className="card">
+        <div className="card animate-fade-in-up">
           <h2>Party Details</h2>
           <table>
             <tbody>

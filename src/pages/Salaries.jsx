@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api';
+import Modal from '../components/Modal';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -95,78 +96,77 @@ export default function Salaries() {
       ) : list.length === 0 ? (
         <p className="empty-state">No salary records yet.</p>
       ) : (
-        <div className="card" style={{ overflow: 'auto' }}>
-          <table>
-            <thead>
-              <tr>
-                <th>Employee</th>
-                <th>Month / Year</th>
-                <th>Amount</th>
-                <th>Paid Date</th>
-                <th>Notes</th>
-                <th style={{ width: '120px' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.map((s) => (
-                <tr key={s.id}>
-                  <td>{s.employee_name || '—'}</td>
-                  <td>{s.month} {s.year}</td>
-                  <td>₹{Number(s.amount).toLocaleString()}</td>
-                  <td>{s.paid_date || '—'}</td>
-                  <td>{s.notes || '—'}</td>
-                  <td>
-                    <button type="button" className="btn btn-secondary" style={{ marginRight: '0.5rem', padding: '0.4rem 0.8rem' }} onClick={() => openEdit(s)}>Edit</button>
-                    <button type="button" className="btn btn-danger" style={{ padding: '0.4rem 0.8rem' }} onClick={() => remove(s.id)}>Delete</button>
-                  </td>
+        <div className="card table-wrap animate-fade-in-up">
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Month / Year</th>
+                  <th>Amount</th>
+                  <th>Paid Date</th>
+                  <th>Notes</th>
+                  <th className="th-actions">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {modal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }} onClick={() => setModal(null)}>
-          <div className="card" style={{ maxWidth: '420px', width: '90%' }} onClick={(e) => e.stopPropagation()}>
-            <h2>{modal === 'add' ? 'Add Salary' : 'Edit Salary'}</h2>
-            <div className="input-group">
-              <label>Employee *</label>
-              <select value={form.employee_id} onChange={(e) => setForm({ ...form, employee_id: e.target.value })}>
-                {employees.map((emp) => <option key={emp.id} value={emp.id}>{emp.name}</option>)}
-              </select>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className="input-group">
-                <label>Month</label>
-                <select value={form.month} onChange={(e) => setForm({ ...form, month: e.target.value })}>
-                  {MONTHS.map((m) => <option key={m} value={m}>{m}</option>)}
-                </select>
-              </div>
-              <div className="input-group">
-                <label>Year</label>
-                <input type="number" value={form.year} onChange={(e) => setForm({ ...form, year: e.target.value })} min="2020" max="2030" />
-              </div>
-            </div>
-            <div className="input-group">
-              <label>Amount (₹) *</label>
-              <input type="number" step="0.01" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
-            </div>
-            <div className="input-group">
-              <label>Paid Date</label>
-              <input type="date" value={form.paid_date} onChange={(e) => setForm({ ...form, paid_date: e.target.value })} />
-            </div>
-            <div className="input-group">
-              <label>Notes</label>
-              <input value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
-            </div>
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
-              <button type="button" className="btn btn-primary" onClick={save}>Save</button>
-              <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
-            </div>
+              </thead>
+              <tbody className="stagger-children">
+                {list.map((s) => (
+                  <tr key={s.id} className="stagger-item">
+                    <td>{s.employee_name || '—'}</td>
+                    <td>{s.month} {s.year}</td>
+                    <td>₹{Number(s.amount).toLocaleString()}</td>
+                    <td>{s.paid_date || '—'}</td>
+                    <td>{s.notes || '—'}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => openEdit(s)}>Edit</button>
+                        <button type="button" className="btn btn-danger btn-sm" onClick={() => remove(s.id)}>Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
+
+      <Modal isOpen={!!modal} onClose={() => setModal(null)} title={modal === 'add' ? 'Add Salary' : 'Edit Salary'}>
+        <div className="input-group">
+          <label>Employee *</label>
+          <select value={form.employee_id} onChange={(e) => setForm({ ...form, employee_id: e.target.value })}>
+            {employees.map((emp) => <option key={emp.id} value={emp.id}>{emp.name}</option>)}
+          </select>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="input-group">
+            <label>Month</label>
+            <select value={form.month} onChange={(e) => setForm({ ...form, month: e.target.value })}>
+              {MONTHS.map((m) => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </div>
+          <div className="input-group">
+            <label>Year</label>
+            <input type="number" value={form.year} onChange={(e) => setForm({ ...form, year: e.target.value })} min="2020" max="2030" />
+          </div>
+        </div>
+        <div className="input-group">
+          <label>Amount (₹) *</label>
+          <input type="number" step="0.01" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
+        </div>
+        <div className="input-group">
+          <label>Paid Date</label>
+          <input type="date" value={form.paid_date} onChange={(e) => setForm({ ...form, paid_date: e.target.value })} />
+        </div>
+        <div className="input-group">
+          <label>Notes</label>
+          <input value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+        </div>
+        <div className="modal-actions">
+          <button type="button" className="btn btn-primary" onClick={save}>Save</button>
+          <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
+        </div>
+      </Modal>
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api';
+import Modal from '../components/Modal';
 
 export default function Parties() {
   const [list, setList] = useState([]);
@@ -66,66 +67,77 @@ export default function Parties() {
       </div>
       {error && <p className="error-msg">{error}</p>}
       {loading ? (
-        <p className="empty-state">Loading...</p>
-      ) : list.length === 0 ? (
-        <p className="empty-state">No parties yet. Add one to get started.</p>
-      ) : (
-        <div className="card" style={{ overflow: 'auto' }}>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Contact</th>
-                <th>Address</th>
-                <th>GSTIN</th>
-                <th style={{ width: '120px' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.map((p) => (
-                <tr key={p.id}>
-                  <td>{p.name}</td>
-                  <td>{p.contact || '—'}</td>
-                  <td>{p.address || '—'}</td>
-                  <td>{p.gstin || '—'}</td>
-                  <td>
-                    <button type="button" className="btn btn-secondary" style={{ marginRight: '0.5rem', padding: '0.4rem 0.8rem' }} onClick={() => openEdit(p)}>Edit</button>
-                    <button type="button" className="btn btn-danger" style={{ padding: '0.4rem 0.8rem' }} onClick={() => remove(p.id)}>Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="card">
+          <div className="empty-state">
+            <div className="skeleton" style={{ height: 24, width: '60%', margin: '0 auto 0.5rem' }} />
+            <div className="skeleton" style={{ height: 20, width: '40%', margin: '0 auto' }} />
+          </div>
         </div>
-      )}
-
-      {modal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }} onClick={() => setModal(null)}>
-          <div className="card" style={{ maxWidth: '420px', width: '90%' }} onClick={(e) => e.stopPropagation()}>
-            <h2>{modal === 'add' ? 'Add Party' : 'Edit Party'}</h2>
-            <div className="input-group">
-              <label>Name *</label>
-              <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Party name" />
-            </div>
-            <div className="input-group">
-              <label>Contact</label>
-              <input value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} placeholder="Phone / Email" />
-            </div>
-            <div className="input-group">
-              <label>Address</label>
-              <textarea value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Address" rows={2} />
-            </div>
-            <div className="input-group">
-              <label>GSTIN</label>
-              <input value={form.gstin} onChange={(e) => setForm({ ...form, gstin: e.target.value })} placeholder="GST number" />
-            </div>
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
-              <button type="button" className="btn btn-primary" onClick={save}>Save</button>
-              <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
-            </div>
+      ) : list.length === 0 ? (
+        <div className="card animate-fade-in-up">
+          <p className="empty-state">No parties yet. Add one to get started.</p>
+        </div>
+      ) : (
+        <div className="card table-wrap animate-fade-in-up">
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Contact</th>
+                  <th>Address</th>
+                  <th>GSTIN</th>
+                  <th className="th-actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="stagger-children">
+                {list.map((p) => (
+                  <tr key={p.id} className="stagger-item">
+                    <td>{p.name}</td>
+                    <td>{p.contact || '—'}</td>
+                    <td>{p.address || '—'}</td>
+                    <td>{p.gstin || '—'}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => openEdit(p)}>Edit</button>
+                        <button type="button" className="btn btn-danger btn-sm" onClick={() => remove(p.id)}>Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
+
+      <Modal
+        isOpen={!!modal}
+        onClose={() => setModal(null)}
+        title={modal === 'add' ? 'Add Party' : 'Edit Party'}
+      >
+        <div className="input-group">
+          <label>Name *</label>
+          <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Party name" />
+        </div>
+        <div className="input-group">
+          <label>Contact</label>
+          <input value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} placeholder="Phone / Email" />
+        </div>
+        <div className="input-group">
+          <label>Address</label>
+          <textarea value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Address" rows={2} />
+        </div>
+        <div className="input-group">
+          <label>GSTIN</label>
+          <input value={form.gstin} onChange={(e) => setForm({ ...form, gstin: e.target.value })} placeholder="GST number" />
+        </div>
+        <div className="modal-actions">
+          <button type="button" className="btn btn-primary" onClick={save}>Save</button>
+          <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
+        </div>
+      </Modal>
+
     </>
   );
 }

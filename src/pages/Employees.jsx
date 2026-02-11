@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api';
+import Modal from '../components/Modal';
 
 export default function Employees() {
   const [list, setList] = useState([]);
@@ -76,62 +77,61 @@ export default function Employees() {
       ) : list.length === 0 ? (
         <p className="empty-state">No employees yet.</p>
       ) : (
-        <div className="card" style={{ overflow: 'auto' }}>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Contact</th>
-                <th>Role</th>
-                <th>Joining Date</th>
-                <th style={{ width: '120px' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.map((emp) => (
-                <tr key={emp.id}>
-                  <td>{emp.name}</td>
-                  <td>{emp.contact || '—'}</td>
-                  <td>{emp.role || '—'}</td>
-                  <td>{emp.joining_date || '—'}</td>
-                  <td>
-                    <button type="button" className="btn btn-secondary" style={{ marginRight: '0.5rem', padding: '0.4rem 0.8rem' }} onClick={() => openEdit(emp)}>Edit</button>
-                    <button type="button" className="btn btn-danger" style={{ padding: '0.4rem 0.8rem' }} onClick={() => remove(emp.id)}>Delete</button>
-                  </td>
+        <div className="card table-wrap animate-fade-in-up">
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Contact</th>
+                  <th>Role</th>
+                  <th>Joining Date</th>
+                  <th className="th-actions">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {modal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }} onClick={() => setModal(null)}>
-          <div className="card" style={{ maxWidth: '420px', width: '90%' }} onClick={(e) => e.stopPropagation()}>
-            <h2>{modal === 'add' ? 'Add Employee' : 'Edit Employee'}</h2>
-            <div className="input-group">
-              <label>Name *</label>
-              <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Employee name" />
-            </div>
-            <div className="input-group">
-              <label>Contact</label>
-              <input value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} placeholder="Phone / Email" />
-            </div>
-            <div className="input-group">
-              <label>Role</label>
-              <input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} placeholder="Designation" />
-            </div>
-            <div className="input-group">
-              <label>Joining Date</label>
-              <input type="date" value={form.joining_date} onChange={(e) => setForm({ ...form, joining_date: e.target.value })} />
-            </div>
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
-              <button type="button" className="btn btn-primary" onClick={save}>Save</button>
-              <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
-            </div>
+              </thead>
+              <tbody className="stagger-children">
+                {list.map((emp) => (
+                  <tr key={emp.id} className="stagger-item">
+                    <td>{emp.name}</td>
+                    <td>{emp.contact || '—'}</td>
+                    <td>{emp.role || '—'}</td>
+                    <td>{emp.joining_date || '—'}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => openEdit(emp)}>Edit</button>
+                        <button type="button" className="btn btn-danger btn-sm" onClick={() => remove(emp.id)}>Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
+
+      <Modal isOpen={!!modal} onClose={() => setModal(null)} title={modal === 'add' ? 'Add Employee' : 'Edit Employee'}>
+        <div className="input-group">
+          <label>Name *</label>
+          <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Employee name" />
+        </div>
+        <div className="input-group">
+          <label>Contact</label>
+          <input value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} placeholder="Phone / Email" />
+        </div>
+        <div className="input-group">
+          <label>Role</label>
+          <input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} placeholder="Designation" />
+        </div>
+        <div className="input-group">
+          <label>Joining Date</label>
+          <input type="date" value={form.joining_date} onChange={(e) => setForm({ ...form, joining_date: e.target.value })} />
+        </div>
+        <div className="modal-actions">
+          <button type="button" className="btn btn-primary" onClick={save}>Save</button>
+          <button type="button" className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
+        </div>
+      </Modal>
     </>
   );
 }

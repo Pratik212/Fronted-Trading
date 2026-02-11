@@ -47,7 +47,7 @@ export default function SearchByParty() {
       <div className="page-header">
         <h1>Search Challan by Party</h1>
       </div>
-      <div className="card" style={{ maxWidth: '560px' }}>
+      <div className="card animate-fade-in-up" style={{ maxWidth: '560px' }}>
         <div className="input-group">
           <label>Search by</label>
           <select value={searchBy} onChange={(e) => setSearchBy(e.target.value)}>
@@ -79,12 +79,12 @@ export default function SearchByParty() {
       </div>
 
       {loaded && (
-        <div className="card">
+        <div className="card animate-fade-in-up">
           <h2>Challans ({list.length})</h2>
           {list.length === 0 ? (
             <p className="empty-state">No challans found for this party.</p>
           ) : (
-            <div style={{ overflow: 'auto' }}>
+            <div className="table-responsive">
               <table>
                 <thead>
                   <tr>
