@@ -4,6 +4,8 @@ import { Outlet, NavLink, useLocation } from 'react-router-dom';
 const navItems = [
   { to: '/app/parties', label: 'Party Details' },
   { to: '/app/challans', label: 'Challans' },
+  { to: '/app/payments', label: 'Payments' },
+  { to: '/app/reports', label: 'Reports' },
   { to: '/app/search-by-challan', label: 'Search by Challan' },
   { to: '/app/search-by-party', label: 'Search by Party' },
   { to: '/app/employees', label: 'Employees' },

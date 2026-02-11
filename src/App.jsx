@@ -5,6 +5,8 @@ import Parties from './pages/Parties';
 import Challans from './pages/Challans';
 import SearchByChallan from './pages/SearchByChallan';
 import SearchByParty from './pages/SearchByParty';
+import Payments from './pages/Payments';
+import Reports from './pages/Reports';
 import Employees from './pages/Employees';
 import Salaries from './pages/Salaries';
 import OfficeExpenses from './pages/OfficeExpenses';
@@ -32,6 +34,8 @@ export default function App() {
         <Route path="challans" element={<Challans />} />
         <Route path="search-by-challan" element={<SearchByChallan />} />
         <Route path="search-by-party" element={<SearchByParty />} />
+        <Route path="payments" element={<Payments />} />
+        <Route path="reports" element={<Reports />} />
         <Route path="employees" element={<Employees />} />
         <Route path="salaries" element={<Salaries />} />
         <Route path="office-expenses" element={<OfficeExpenses />} />
