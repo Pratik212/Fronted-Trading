@@ -120,6 +120,20 @@ export default function OfficeExpenses() {
               </tbody>
             </table>
           </div>
+          <div className="list-cards-mobile">
+            {list.map((e) => (
+              <div key={e.id} className="list-card-item">
+                <div className="detail-row"><span>Date</span><span>{e.date || '—'}</span></div>
+                <div className="detail-row"><span>Category</span><span>{e.category || '—'}</span></div>
+                <div className="detail-row"><span>Description</span><span>{e.description || '—'}</span></div>
+                <div className="detail-row"><span>Amount</span><span>₹{Number(e.amount).toLocaleString()}</span></div>
+                <div className="card-actions">
+                  <button type="button" className="btn btn-secondary btn-sm btn-icon" onClick={() => openEdit(e)} title="Edit"><EditIcon /></button>
+                  <button type="button" className="btn btn-danger btn-sm btn-icon" onClick={() => setDeleteConfirm({ id: e.id })} title="Delete"><TrashIcon /></button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

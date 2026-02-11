@@ -379,9 +379,66 @@ tbody tr:active td {
   -webkit-overflow-scrolling: touch;
 }
 
-.table-responsive table {
-  min-width: 640px;
+/* Desktop: table; mobile: hide table and show cards so no horizontal scroll */
+@media (max-width: 768px) {
+  .table-responsive { display: none !important; }
 }
+@media (min-width: 769px) {
+  .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-responsive table { min-width: 640px; }
+  .list-cards-mobile { display: none !important; }
+}
+
+/* Mobile card list: one card per row, all details visible without scroll */
+.list-cards-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.list-card-item {
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+.list-card-item .detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.list-card-item .detail-row:last-of-type { border-bottom: none; }
+.list-card-item .detail-row span:first-child { color: var(--text-muted); flex-shrink: 0; }
+.list-card-item .detail-row span:last-child { text-align: right; word-break: break-word; }
+.list-card-item .card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Detail grid for key-value blocks (e.g. Search Party result) - no table, no scroll */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+@media (min-width: 480px) {
+  .detail-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.detail-grid .detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.detail-grid .detail-item:last-child { border-bottom: none; }
+.detail-grid .detail-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.detail-grid .detail-value { font-weight: 500; word-break: break-word; }
 
 .table-wrap {
   padding: 0;

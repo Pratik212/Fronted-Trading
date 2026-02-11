@@ -131,6 +131,21 @@ export default function Salaries() {
               </tbody>
             </table>
           </div>
+          <div className="list-cards-mobile">
+            {list.map((s) => (
+              <div key={s.id} className="list-card-item">
+                <div className="detail-row"><span>Employee</span><span>{s.employee_name || '—'}</span></div>
+                <div className="detail-row"><span>Month / Year</span><span>{s.month} {s.year}</span></div>
+                <div className="detail-row"><span>Amount</span><span>₹{Number(s.amount).toLocaleString()}</span></div>
+                <div className="detail-row"><span>Paid Date</span><span>{s.paid_date || '—'}</span></div>
+                <div className="detail-row"><span>Notes</span><span>{s.notes || '—'}</span></div>
+                <div className="card-actions">
+                  <button type="button" className="btn btn-secondary btn-sm btn-icon" onClick={() => openEdit(s)} title="Edit"><EditIcon /></button>
+                  <button type="button" className="btn btn-danger btn-sm btn-icon" onClick={() => setDeleteConfirm({ id: s.id })} title="Delete"><TrashIcon /></button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

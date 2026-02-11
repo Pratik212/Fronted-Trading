@@ -51,18 +51,16 @@ export default function SearchByChallan() {
       {result && (
         <div className="card animate-fade-in-up">
           <h2>Party Details</h2>
-          <table>
-            <tbody>
-              <tr><th style={{ width: '180px' }}>Party Name</th><td>{result.name}</td></tr>
-              <tr><th>Contact</th><td>{result.contact || '—'}</td></tr>
-              <tr><th>Address</th><td>{result.address || '—'}</td></tr>
-              <tr><th>GSTIN</th><td>{result.gstin || '—'}</td></tr>
-              <tr><th>Challan Number</th><td>{result.challan_number}</td></tr>
-              <tr><th>Challan Date</th><td>{result.challan_date || '—'}</td></tr>
-              <tr><th>Challan Amount</th><td>₹{Number(result.challan_amount || 0).toLocaleString()}</td></tr>
-              <tr><th>Description</th><td>{result.description || '—'}</td></tr>
-            </tbody>
-          </table>
+          <div className="detail-grid">
+            <div className="detail-item"><span className="detail-label">Party Name</span><span className="detail-value">{result.name}</span></div>
+            <div className="detail-item"><span className="detail-label">Contact</span><span className="detail-value">{result.contact || '—'}</span></div>
+            <div className="detail-item"><span className="detail-label">Address</span><span className="detail-value">{result.address || '—'}</span></div>
+            <div className="detail-item"><span className="detail-label">GSTIN</span><span className="detail-value">{result.gstin || '—'}</span></div>
+            <div className="detail-item"><span className="detail-label">Challan Number</span><span className="detail-value">{result.challan_number}</span></div>
+            <div className="detail-item"><span className="detail-label">Challan Date</span><span className="detail-value">{result.challan_date || '—'}</span></div>
+            <div className="detail-item"><span className="detail-label">Challan Amount</span><span className="detail-value">₹{Number(result.challan_amount || 0).toLocaleString()}</span></div>
+            <div className="detail-item"><span className="detail-label">Description</span><span className="detail-value">{result.description || '—'}</span></div>
+          </div>
         </div>
       )}
     </>

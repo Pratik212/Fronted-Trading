@@ -84,30 +84,43 @@ export default function SearchByParty() {
           {list.length === 0 ? (
             <p className="empty-state">No challans found for this party.</p>
           ) : (
-            <div className="table-responsive">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Challan No</th>
-                    <th>Party</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {list.map((c) => (
-                    <tr key={c.id}>
-                      <td>{c.challan_number}</td>
-                      <td>{c.party_name || '—'}</td>
-                      <td>{c.date || '—'}</td>
-                      <td>₹{Number(c.amount || 0).toLocaleString()}</td>
-                      <td>{c.description || '—'}</td>
+            <>
+              <div className="table-responsive">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Challan No</th>
+                      <th>Party</th>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Description</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {list.map((c) => (
+                      <tr key={c.id}>
+                        <td>{c.challan_number}</td>
+                        <td>{c.party_name || '—'}</td>
+                        <td>{c.date || '—'}</td>
+                        <td>₹{Number(c.amount || 0).toLocaleString()}</td>
+                        <td>{c.description || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="list-cards-mobile">
+                {list.map((c) => (
+                  <div key={c.id} className="list-card-item">
+                    <div className="detail-row"><span>Challan No</span><span>{c.challan_number}</span></div>
+                    <div className="detail-row"><span>Party</span><span>{c.party_name || '—'}</span></div>
+                    <div className="detail-row"><span>Date</span><span>{c.date || '—'}</span></div>
+                    <div className="detail-row"><span>Amount</span><span>₹{Number(c.amount || 0).toLocaleString()}</span></div>
+                    <div className="detail-row"><span>Description</span><span>{c.description || '—'}</span></div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       )}

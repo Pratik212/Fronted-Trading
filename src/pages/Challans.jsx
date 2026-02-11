@@ -120,6 +120,21 @@ export default function Challans() {
               </tbody>
             </table>
           </div>
+          <div className="list-cards-mobile">
+            {list.map((c) => (
+              <div key={c.id} className="list-card-item">
+                <div className="detail-row"><span>Challan No</span><span>{c.challan_number}</span></div>
+                <div className="detail-row"><span>Party</span><span>{c.party_name || '—'}</span></div>
+                <div className="detail-row"><span>Date</span><span>{c.date || '—'}</span></div>
+                <div className="detail-row"><span>Amount</span><span>₹{Number(c.amount).toLocaleString()}</span></div>
+                <div className="detail-row"><span>Description</span><span>{c.description || '—'}</span></div>
+                <div className="card-actions">
+                  <button type="button" className="btn btn-secondary btn-sm btn-icon" onClick={() => openEdit(c)} title="Edit"><EditIcon /></button>
+                  <button type="button" className="btn btn-danger btn-sm btn-icon" onClick={() => setDeleteConfirm({ id: c.id })} title="Delete"><TrashIcon /></button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

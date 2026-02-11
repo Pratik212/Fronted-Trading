@@ -110,6 +110,20 @@ export default function Employees() {
               </tbody>
             </table>
           </div>
+          <div className="list-cards-mobile">
+            {list.map((emp) => (
+              <div key={emp.id} className="list-card-item">
+                <div className="detail-row"><span>Name</span><span>{emp.name}</span></div>
+                <div className="detail-row"><span>Contact</span><span>{emp.contact || '—'}</span></div>
+                <div className="detail-row"><span>Role</span><span>{emp.role || '—'}</span></div>
+                <div className="detail-row"><span>Joining Date</span><span>{emp.joining_date || '—'}</span></div>
+                <div className="card-actions">
+                  <button type="button" className="btn btn-secondary btn-sm btn-icon" onClick={() => openEdit(emp)} title="Edit"><EditIcon /></button>
+                  <button type="button" className="btn btn-danger btn-sm btn-icon" onClick={() => setDeleteConfirm({ id: emp.id })} title="Delete"><TrashIcon /></button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

@@ -111,6 +111,20 @@ export default function Parties() {
               </tbody>
             </table>
           </div>
+          <div className="list-cards-mobile">
+            {list.map((p) => (
+              <div key={p.id} className="list-card-item">
+                <div className="detail-row"><span>Name</span><span>{p.name}</span></div>
+                <div className="detail-row"><span>Contact</span><span>{p.contact || '—'}</span></div>
+                <div className="detail-row"><span>Address</span><span>{p.address || '—'}</span></div>
+                <div className="detail-row"><span>GSTIN</span><span>{p.gstin || '—'}</span></div>
+                <div className="card-actions">
+                  <button type="button" className="btn btn-secondary btn-sm btn-icon" onClick={() => openEdit(p)} title="Edit"><EditIcon /></button>
+                  <button type="button" className="btn btn-danger btn-sm btn-icon" onClick={() => setDeleteConfirm({ id: p.id })} title="Delete"><TrashIcon /></button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
